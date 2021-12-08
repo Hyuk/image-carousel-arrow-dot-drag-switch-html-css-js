@@ -3,8 +3,8 @@ var sliding = startClientX = startPixelOffset = pixelOffset = presentSlide = 0;
 var slideCount = document.getElementsByClassName("slide").length; // 슬라이드 갯수 확인
 
 document.querySelector('.slide').addEventListener('mousedown touchstart', slideStart);
-document.querySelector('.slide').addEventListener('mousedown touchstart', slideStart);
-document.querySelector('.slide').addEventListener('mousedown touchstart', slideStart);
+document.querySelector('.slide').addEventListener('mouseup touchend', slideEnd);
+document.querySelector('.slide').addEventListener('mousemove touchmove', slide);
 
 console.log("slideIndex: " + slideIndex); // console.log
 autoSlides();
