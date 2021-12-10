@@ -11,12 +11,14 @@ var slideNumber; // how many slide
 var slideWidth; // width value of each slide
 var slideIndex = 1; // slideIndex: 슬라이드 번호
 var slideShowAuto; // clearTimeout을 사용하기 위해 setTimeout을 저장할 변수 선언
+var dots;
 
 slideshowContainer = document.querySelector('.slideshow-container'); // .slideshow-container element
 slideWrapper = document.querySelector('.slide-wrapper'); // .slide-wrapper element
 slideItem = document.querySelectorAll('.slide'); // .slide element
 slideNumber = slideItem.length; // .slide 갯수
 slideWidth = slideshowContainer.offsetWidth; // .slodeshow-container의 가로값
+dots = document.querySelectorAll('.dot');
 
 let isMouseDown = false; // 마우스 클릭 상태 기본값
 let startX; // 마우스 클릭한 X 좌표
@@ -45,6 +47,7 @@ function initSlides() {
 
   // 두번째 이미지를 첫번째 이미지로 설정한다.
   slideWrapper.style.left = -(slideWidth) + 'px';
+  dots[0].classList.add('active');
 }
 
 
@@ -55,6 +58,19 @@ function plusSlides(n) {
   // 왼쪽 arrow 클릭시, 이미지 인덱스가 1 이상이면, 이전슬라이드로 이동하고, 이미지 인덱스가 0이면 이미지 인덱스 값을 5로 변경한다.
   // 오른쪽 arrow 클릭시, 이미지 인덱스가 7보다 작으면, 다음 슬라이드로 이동하고, 이미지 인덱스가 7이면 이미지 인덱스 값을 1로 변경한다.
   n < 1 ? slideIndex > 0 ? slideIndex -= 1: slideIndex = 5 : slideIndex < 7 ? slideIndex += 1 : slideIndex = 1;
+  for (let i = 0; i < dots.length; i++) { // 모든 dot에서 active 클래스를 지운다.
+    dots[i].classList.remove('active');
+  }
+  if (slideIndex >= 1 && slideIndex <= 5) { 
+    // 슬라이드 인덱스가 0과 같거나 크고 5보다 작거나 같으면 슬라이드 인덱스에서 1을 뺀 dot에 active 클래스를 추가한다.
+    dots[slideIndex - 1].classList.add('active');
+  }
+  if (slideIndex == 6) { // 슬라이드 인덱스가 6일때, 처음 dot에 active 클래스를 추가한다.
+    dots[0].classList.add('active');
+  }
+  if (slideIndex == 0) { // 슬라이드 인덱스가 0일때, 마지막 dot에 active 클래스를 추가한다.
+    dots[4].classList.add('active');
+  }
   // console.log("slideIndex: " + slideIndex);
   // 이미지 가로값에 이미지 인덱스 값을 마이너스한 값을 곱해서 'px'를 붙여 슬라이드 전체 이미지의 left 값을 조정한다.
   // css에 .slide-wrapper에 transition 값에 따라 전환 효과가 적용된다. 
@@ -98,6 +114,10 @@ function plusSlides(n) {
 // Dots image controls
 function currentSlide(n) {
   clearTimeout(slideShowAuto); // setTimeout을 초기화 한다.
+  for (let i = 0; i < dots.length; i++) {
+    dots[i].classList.remove('active');
+  }
+  dots[n-1].classList.add('active');
   // console.log(n + " clicked");
   // console.log("currentSlides: " + n);
   showSlides(slideIndex = n); // showSlides 함수 호출한다.
@@ -105,12 +125,8 @@ function currentSlide(n) {
 
 function showSlides(n) {
   // console.log("showSlides: " + n);
-  if (n > 0) { 
-    slideWrapper.style.left = -n * slideWidth + 'px';
-  } else {
-    slideWrapper.style.left = n * slideWidth + 'px';
-  }
-  // console.log("showSlides: " + n);
+  // dot를 클릭하면 slide-wrapper의 left 값을 각 슬라이드 가로값 곱하기 dot의 n 값을 곱해서 이동한다. 
+  slideWrapper.style.left = -n * slideWidth + 'px';
 }
 
 function autoSlides() {

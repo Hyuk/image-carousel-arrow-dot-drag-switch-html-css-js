@@ -28,20 +28,20 @@ header .header-content a {
 }
 
 .slide {
-  /* width: 100%; */
   height: 440px;
-  /* display: none; */
   background-size: cover;
   background-position: center;
   float: left;
-  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .slide .slide-content-wrapper {
   text-align: center;
-  position: absolute;
+  /* position: absolute;
   top: 27%;
-  left: calc((100% - 400px) / 2);
+  left: calc((100% - 400px) / 2); */
   width: 400px;
 }
 
