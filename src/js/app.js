@@ -5,21 +5,25 @@
 // .slideshow-container .next -> arrow
 // .slideshow-container .dots-container .dot -> dot
 
-var slideshowContainer;
+var slideshowContainer; // # slideshow-conatainer element
 var slideWrapper; // # slide-wrapper element
 var slideNumber; // # how many slide
 var slideWidth; // # width value of slide
 var slideWrapperWidth; // # slide-wrapper 가로값
 var slideIndex = 1; // # slideIndex: 슬라이드 번호
+
 // var sliding = startClientX = startPixelOffset = pixelOffset = presentSlide = 0;
 // var slideCount = document.getElementsByClassName("slide").length; // 슬라이드 갯수 확인
-var slideShowAuto;
+var slideShowAuto; // # clearTimeout을 사용하기 위해 변수 선언
 
 slideshowContainer = document.querySelector('.slideshow-container'); // .slideshow-container element
 slideWrapper = document.querySelector('.slide-wrapper'); // .slide-wrapper element
 slideItem = document.querySelectorAll('.slide'); // .slide element
 slideNumber = slideItem.length; // .slide 갯수
 slideWidth = slideshowContainer.offsetWidth; // .slodeshow-container의 가로값
+
+let isMouseDown = false;
+let startX, scrollLeft;
 
 // 각 .slide 이미지 가로값을 상위 .slideshow-container의 가로값으로 지정
 for (let i = 0; i < slideNumber; i++) {
@@ -31,6 +35,8 @@ console.log("slideIndex: " + slideIndex); // console.log
 // showSlides(slideIndex);
 makeClone(); // 처음 이미지와 마지막 이미지 복수 함수
 initSlides();
+autoSlides();
+
 
 function makeClone() {
   let cloneSlide_first = slideItem[0].cloneNode(true);
@@ -50,6 +56,7 @@ function initSlides() {
 
 // Next/previous controls
 function plusSlides(n) {
+  clearTimeout(slideShowAuto); // 슬라이드 이동시 autoSlide의 setTimeout 초기화
   console.log(n < 1 ? "left clicked" : "right clicked") // console.log
   n < 1 ? slideIndex > 0 ? slideIndex -= 1: slideIndex = 5 : slideIndex < 7 ? slideIndex += 1 : slideIndex = 1;
   console.log("slideIndex: " + slideIndex);
@@ -85,54 +92,18 @@ function plusSlides(n) {
     console.log("slideIndex: " + slideIndex);
     slideWrapper.style.transition = `${0.5}s ease-out`;
   }
-  // console.log("plusSlides: " + n) // console.log
-  // //showSlides(slideIndex += 1);
-  // console.log("slideIndex: " + slideIndex)
-  // if (slideIndex == 1) {
-  //   if (n == 1) {
-  //     slideIndex += 1;
-  //   }
-  //   slideWrapper.style.left = 0 - slideWidth + 'px';
-  //   console.log(slideWrapper.style.left);
-  // }
-  // if (slideIndex > 1) {
-  //   slideWrapper.style.left = parseInt(document.querySelector('.slide-wrapper').style.left) - slideWidth + 'px';
-  //   console.log(slideWrapper.style.left);
-  // }
-  // if (n > 0) {
-  //   slideIndex += 1;
-  //   console.log(parseInt(document.querySelector('.slide-wrapper').style.left) - slideWidth + 'px');
-  //   slideWrapper.style.left = parseInt(document.querySelector('.slide-wrapper').style.left) - slideWidth + 'px';
-  // } else {
-  //   slideIndex -= 1;
-  //   console.log(parseInt(document.querySelector('.slide-wrapper').style.left) - slideWidth + 'px');
-  //   slideWrapper.style.left = parseInt(document.querySelector('.slide-wrapper').style.left) - slideWidth + 'px';
-  // }
 }
 
 // Dots image controls
 function currentSlide(n) {
+  clearTimeout(slideShowAuto);
   console.log(n + " clicked"); // console.log
   console.log("currentSlides: " + n) // console.log
   showSlides(slideIndex = n);
 }
 function autoSlides() {
-  console.log("autoSlides function is fired")
-  var i;
-  var slides = document.getElementsByClassName("slide");
-  var dots = document.getElementsByClassName("dot");
-  for (i = 0; i < slides.length; i++) {
-    // slides[i].style.display = "none";
-  }
-  for (i = 0; i < dots.length; i++) {
-    dots[i].className = dots[i].className.replace(" active", "");
-  }
-  slideIndex++;
-  console.log("slideIndex: " + slideIndex)
-  if (slideIndex > slides.length) {slideIndex = 1}
-  slides[slideIndex-1].style.display = "block";
-  dots[slideIndex-1].className += " active";
-  setTimeout(autoSlides, 4000); // Change image every 2 seconds
+  slideShowAuto = setTimeout(function() {plusSlides(1)}, 4000);
+  setTimeout(autoSlides, 4000);
 }
 
 function showSlides(n) {
@@ -143,97 +114,34 @@ function showSlides(n) {
     slideWrapper.style.left = n * slideWidth + 'px';
   }
   console.log("showSlides: " + n);
-  // var i;
-  // var slides = document.getElementsByClassName("slide");
-  // var dots = document.getElementsByClassName("dot");
-  // if (n > slides.length) {
-  //   slideIndex = 1
-  //   console.log("slideIndex: " + slideIndex); // console.log
-  // }
-  // if (n < 1) {
-  //   slideIndex = slides.length;
-  //   console.log("slideIndex: " + slideIndex); // console.log
-  // }
-  // for (i = 0; i < slides.length; i++) {
-  //   // slides[i].style.display = "none";
-  // }
-  // for (i = 0; i < dots.length; i++) {
-  //   dots[i].className = dots[i].className.replace(" active", "");
-  // }
-  // slides[slideIndex-1].style.display = "block"
-  // dots[slideIndex-1].className += " active";
-
-  // setTimeout(showSlides(n+1), 2000);
 }
 
-// document.querySelector('.slide').addEventListener('mousedown touchstart', slideStart);
-// document.querySelector('.slide').addEventListener('mouseup touchend', slideEnd);
-// document.querySelector('.slide').addEventListener('mousemove touchmove', slide);
+slideWrapper.addEventListener('mousedown', (e) => {
+  console.log("mousedown event is fired!");
+  isMouseDown = true;
+  slideWrapper.classList.add('active');
+  startX = e.pageX;
+  console.log("startX: " + startX);
+});
 
-/**
-/ Triggers when slide event started
-*/
-// function slideStart(event) {
-//   console.log("slideStart event is fired");
-//   // If it is mobile device redefine event to first touch point
-//   if (event.originalEvent.touches)
-//     event = event.originalEvent.touches[0];
-//   // If sliding not started yet store current touch position to calculate distance in future.
-//   if (sliding == 0) {
-//     sliding = 1; // Status 1 = slide started.
-//     startClientX = event.clientX;
-//   }
-// }
+slideWrapper.addEventListener('mouseleave', (e) => {
+  console.log("mouseleave event is fired!");
+  isMouseDown = false;
+});
 
- /** Occurs when image is being slid.
-*/
-// function slide(event) {
-//   console.log("slide event is fired");
-//   event.preventDefault();
-//   if (event.originalEvent.touches)
-//     event = event.originalEvent.touches[0];
-//   // Distance of slide.
-//   var deltaSlide = event.clientX - startClientX;
-//   // If sliding started first time and there was a distance.
-//   if (sliding == 1 && deltaSlide != 0) {
-//     sliding = 2; // Set status to 'actually moving'
-//     startPixelOffset = pixelOffset; // Store current offset
-//   }
-  
-//   //  When user move image
-//   if (sliding == 2) {
-//     // Means that user slide 1 pixel for every 1 pixel of mouse movement.
-//     var touchPixelRatio = 1;
-//     // Check for user doesn't slide out of boundaries
-//     if ((currentSlide == 0 && event.clientX > startClientX) ||
-//         (currentSlide == slideCount - 1 && event.clientX < startClientX))
-//       // Set ratio to 3 means image will be moving by 3 pixels each time user moves it's pointer by 1 pixel. (Rubber-band effect)
-//       touchPixelRatio = 3;
-//     // Calculate move distance.
-//     pixelOffset = startPixelOffset + deltaSlide / touchPixelRatio;
-//     // Apply moving and remove animation class
-//     document.querySelector('#slides').css('transform', 'translateX(' + pixelOffset + 'px').removeClass();
-//   }
-// }
+slideWrapper.addEventListener('mouseup', (e) => {
+  console.log("mouseup event is fired!");
+  isMouseDown = false;
+  console.log("e.pageX: " + e.pageX);
+  if (startX - e.pageX < 0) {
+    plusSlides(-1);
+  } else if (startX - e.pageX > 0) {
+    plusSlides(1);
+  }
+});
 
-/** When user release pointer finish slide moving.
-*/
-// function slideEnd(event) {
-//   console.log("slideEnd event is fired");
-//   if (sliding == 2){
-//     // Reset sliding.
-//     sliding = 0;
-//     // Calculate which slide need to be in view.
-//     currentSlide = pixelOffset < startPixelOffset ? currentSlide + 1 : currentSlide -1;
-//     // Make sure that unexisting slides weren't selected.
-//     currentSlide = Math.min(Math.max(currentSlide, 0), slideCount - 1);
-//     // Since in this example slide is full viewport width offset can be calculated according to it.
-//     pixelOffset = currentSlide * -document.querySelector('body').width();
-//     // Remove style from DOM (look below)
-//     document.querySelector('#temp').remove();
-//     // Add a translate rule dynamically and asign id to it
-//     document.querySelector('<style id="temp">#slides.animate{transform:translateX(' + pixelOffset + 'px)}</style>').appendTo('head');
-//     // Add animate class to slider and reset transform prop of this class.
-//     document.querySelector('#slides').classList.add('animate').css('transform', '');
-//   }
-// }
+slideWrapper.addEventListener('mousemove', (e) => {
+  if (isMouseDown) { // # mousedown is true
+    e.preventDefault();
+  } else return;
+});
