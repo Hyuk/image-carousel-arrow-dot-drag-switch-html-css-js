@@ -152,15 +152,15 @@ slideWrapper.addEventListener('mouseup', (e) => {
   // console.log("mouseup event is fired!");
   isMouseDown = false;
   // console.log("e.pageX: " + e.pageX);
-  if (startX - e.pageX < 0) { // when user drag mouse on right side
+  if (startX - e.pageX < 0) { // 오른쪽으로 드래그한 경우
     plusSlides(-1);
-  } else if (startX - e.pageX > 0) { // when user drag mouse on left side
+  } else if (startX - e.pageX > 0) { // 왼쪽으로 드래그한 경우
     plusSlides(1); 
   }
 });
 
 slideWrapper.addEventListener('mousemove', (e) => {
-  if (isMouseDown) { // mousedown is true
-    e.preventDefault(); // previent default event
+  if (isMouseDown) { // 마우스를 클릭했을때
+    e.preventDefault(); // 기본 이벤트를 방지한다.
   } else return;
 });

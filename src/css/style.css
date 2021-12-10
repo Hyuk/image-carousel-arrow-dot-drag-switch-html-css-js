@@ -15,11 +15,10 @@ header .header-content a {
 }
 
 .slideshow-container {
-  width: 100%; /* is should be 100% */
+  width: 100%;
   height: 440px;
   overflow: hidden;
   position: relative;
-  /* margin: 0 auto;  */ 
 }
 
 .slide-wrapper {
@@ -39,9 +38,6 @@ header .header-content a {
 
 .slide .slide-content-wrapper {
   text-align: center;
-  /* position: absolute;
-  top: 27%;
-  left: calc((100% - 400px) / 2); */
   width: 400px;
 }
 
@@ -151,22 +147,4 @@ a.button {
 
 .active, .dot:hover {
   background-color: #717171;
-}
-
-/* Fading animation */
-.fade {
-  -webkit-animation-name: fade;
-  -webkit-animation-duration: 1.5s;
-  animation-name: fade;
-  animation-duration: 1.5s;
-}
-
-@-webkit-keyframes fade {
-  from {opacity: .4}
-  to {opacity: 1}
-}
-
-@keyframes fade {
-  from {opacity: .4}
-  to {opacity: 1}
 }
